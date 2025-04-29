@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>Group-Chat Translator v12 (4 phones, cached)</title>
+ <link rel="stylesheet" href="style.css">
+</head>
+<body>
+ <div class="container">
+ </div>
+ <template id="phone_template">
+ <div class="phone" id="PHONE_ID_REPLACE">
+ <div class="screen">
+ <div class="dynamic_island"></div>
+ <div class="lang_blob" id="blob_ID">EN
+ <select id="select_ID" aria-label="Language selector">
+ <option value="en" selected>EN</option><option value="es">ES</option><option value="fr">FR</option><option value="de">DE</option><option value="zh">中</option><option value="jp">日</option>
+ </select>
+ </div>
+ <div class="messages" id="msgs_ID"></div>
+ <div class="input_area">
+ <input id="input_ID" class="text_input" placeholder="Type a message…" type="text">
+ <button id="send_ID" class="send_button" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
+ </div>
+ </div>
+ </div>
+ </template>
+
+ <script src="script.js"></script>
+</body>
+</html>

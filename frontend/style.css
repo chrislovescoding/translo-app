@@ -1,0 +1,152 @@
+/* ===== Base reset & layout ===== */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;display:flex;justify-content:center;align-items:center;background:#e9e9ef;font-family:"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif; padding: 20px;}
+.container{
+    display:flex;
+    gap: 32px;
+    flex-wrap:wrap;
+    max-width:1400px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+/* ===== Phone frame ===== */
+.phone{
+    --r: 46px;
+    --b: 10px;
+    width: clamp(240px, 21vw, 300px);
+    aspect-ratio: 1 / 2;
+    position:relative;
+    border-radius:var(--r);
+    background:linear-gradient(135deg,#5b4c73 0%,#1d1729 100%);
+    box-shadow:0 24px 48px rgba(0,0,0,.35);
+    padding:var(--b);
+    display:flex;
+    flex-direction:column;
+    transition: width 0.2s ease-out, height 0.2s ease-out;
+}
+.screen{flex:1;background:#fff;border-radius:calc(var(--r) - var(--b));position:relative;overflow:hidden;display:flex;flex-direction:column}
+
+/* ===== Dynamic Island & Lang blob ===== */
+.dynamic_island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:104px;height:32px;background:linear-gradient(#1a1a1a,#000);border-radius:16px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;box-shadow:0 8px 16px rgba(0,0,0,.35);border:1px solid #2c2c2e;font-weight:600;letter-spacing:.5px}
+.dynamic_island::after{content:"";width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#4a4a4a 0%,#0e0e0e 60%)}
+.lang_blob {position: absolute; top: 12px; left: calc(50% + 52px + 16px); width: 32px; height: 32px; background: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 12px; font-weight: 600; letter-spacing: .5px; font-family: "SF Pro Text", sans-serif; cursor: pointer; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.3); border: 1px solid #2c2c2e;}
+.lang_blob select{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
+
+/* ===== Messages ===== */
+.messages{flex:1;padding:16px 16px 16px; margin-top:52px; overflow-y:auto;display:flex;flex-direction:column; scrollbar-width:none;}
+.messages::-webkit-scrollbar{display:none}
+
+.bubble {
+    max-width: 72%;
+    padding: 10px 14px;
+    font-size: 15px;
+    line-height: 1.4;
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, .13); /* Subtle shadow */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: bubble_in .3s forwards;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    border-radius: 18px; /* Slightly reduced base radius */
+    /* Add this line */
+    margin-top: 12px; /* <<< SET A DEFAULT TOP MARGIN HERE (e.g., 12px) */
+    /* Make sure there isn't another margin-top: 0; below this */
+}
+.bubble span{white-space:pre-wrap;word-break:break-word}
+
+/* *** REDUCED GAP for consecutive messages *** */
+.bubble.consecutive {
+    margin-top: 2px !important; /* Closer spacing */
+    box-shadow: none; /* Remove shadow for inner bubbles for flatter look */
+}
+/* Add shadow back to the last bubble in a sequence */
+.bubble.last-in-sequence.consecutive {
+     box-shadow:0 1px 0.5px rgba(0,0,0,.13);
+}
+
+
+/* --- Bubble Tick Styling (Refined) --- */
+/* Define base rounded corners */
+.bubble.incoming { border-radius: 18px; align-self: flex-start; background: #e4e4e8; color: #000; }
+.bubble.outgoing { border-radius: 18px; align-self: flex-end; background: #0a84ff; color: #fff; }
+
+/* Incoming Message Shapes */
+.bubble.incoming.first-in-sequence.last-in-sequence { /* Single message */
+    border-top-left-radius: 18px;
+    border-bottom-left-radius: 5px; /* Only bottom tick */
+}
+.bubble.incoming.first-in-sequence:not(.last-in-sequence) { /* First of multiple */
+    border-top-left-radius: 18px; /* Keep top round */
+    border-bottom-left-radius: 5px; /* Flatten bottom */
+}
+ .bubble.incoming.middle-in-sequence { /* Middle */
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+ .bubble.incoming.last-in-sequence:not(.first-in-sequence) { /* Last of multiple */
+    border-top-left-radius: 5px; /* Flatten top */
+    border-bottom-left-radius: 18px; /* Keep bottom round */
+}
+
+/* Outgoing Message Shapes */
+.bubble.outgoing.first-in-sequence.last-in-sequence { /* Single message */
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 5px;
+}
+.bubble.outgoing.first-in-sequence:not(.last-in-sequence) { /* First of multiple */
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 5px;
+}
+.bubble.outgoing.middle-in-sequence { /* Middle */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.bubble.outgoing.last-in-sequence:not(.first-in-sequence) { /* Last of multiple */
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 18px;
+}
+
+
+/* Style for Sender Name */
+.bubble .sender_name {
+    font-weight: bold;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #6c757d;
+    align-self: flex-start;
+}
+.bubble.outgoing .sender_name { display: none; }
+.bubble.typing .sender_name.typing_name { font-weight: normal; font-style: italic; font-size: 13px; color: #6b6b6f; margin-bottom: 2px; }
+
+/* Typing Bubble Specific Styles */
+.incoming.typing {
+    background: #e4e4e8; color: #6b6b6f; opacity: 1; padding: 8px 16px;
+    min-height: 40px; justify-content: flex-start; box-shadow: none;
+    border: 1px solid #dcdce0;
+    border-radius: 18px; /* Match bubble radius */
+    margin-top: 1px;
+}
+
+
+/* Animations */
+@keyframes fade_out_bubble { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
+.bubble.typing.hiding { animation: fade_out_bubble 0.3s ease-out forwards; pointer-events: none; }
+@keyframes bubble_in{to{opacity:1;transform:translateY(0)}}
+
+/* Typing indicator dots */
+.typing_indicator{display:flex;gap:3px;align-items:flex-end;height:8px; margin-top: 2px;}
+.typing_indicator span{display:block;width:5px;height:5px;background:currentColor;border-radius:50%;animation:typing 1s infinite ease-in-out}
+.typing_indicator span:nth-child(2){animation-delay:.2s}
+.typing_indicator span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-3px);opacity:1}}
+
+/* ===== Input area ===== */
+.input_area { display: flex; gap: 8px; padding: 10px 12px 0; margin-bottom: 12px; background: #fafafa; border-top: 1px solid #e2e2e6; box-shadow: 0 -1px 3px rgba(0,0,0,.05); align-items: center; }
+.text_input { flex: 1; padding: 10px 15px; border: 1px solid #d0d0d4; border-radius: 20px; background: #fff; font-size: 15px; outline: none; transition: border .2s, box-shadow .2s; min-width: 50px; }
+.text_input:focus{border-color:#0a84ff;box-shadow:0 0 0 2px rgba(10,132,255,.2)}
+.send_button { width: 40px; height: 40px; flex-shrink: 0; background: #0a84ff; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,.15); transition: transform .1s, box-shadow .15s; }
+.send_button svg{width:18px;height:18px;fill:#fff}
+.send_button:active{transform:scale(.85);box-shadow:0 1px 2px rgba(0,0,0,.18)}
