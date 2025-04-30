@@ -1,116 +1,368 @@
 /* ===== Base reset & layout ===== */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;display:flex;justify-content:center;align-items:center;background:#e9e9ef;font-family:"SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif; padding: 20px;}
+
+/* ===== Authentication Container ===== */
+.auth-container {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px; /* Limit width of auth box */
+    text-align: center;
+}
+.auth-form h2 {
+    margin-bottom: 25px;
+    color: #333;
+    font-weight: 600;
+}
+/* Style inputs within auth forms */
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.2s;
+}
+.auth-form input:focus {
+    outline: none;
+    border-color: #0a84ff; /* Highlight focus */
+}
+/* Style buttons within auth forms */
+.auth-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #0a84ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px; /* Space above button */
+}
+.auth-form button:hover {
+    background-color: #0077e6; /* Darker blue on hover */
+}
+/* Style paragraphs and links in auth forms */
+.auth-form p {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #555;
+}
+.auth-form a {
+    color: #0a84ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+.auth-form a:hover {
+    text-decoration: underline;
+}
+/* Style for error messages */
+.error-message {
+    color: #dc3545; /* Red color for errors */
+    font-size: 13px;
+    margin-top: 10px;
+    min-height: 18px; /* Reserve space to prevent layout jumps */
+    text-align: left; /* Align error text left */
+}
+
+
+/* ===== Main App Layout ===== */
+/* Apply container styles to #app-container when visible */
 .container{
     display:flex;
-    gap: 32px;
-    flex-wrap:wrap;
-    max-width:1400px;
-    justify-content: center;
-    align-items: flex-start;
+    gap: 0; /* Remove gap, manage spacing via borders/padding */
+    flex-wrap:nowrap; /* Prevent wrapping sidebar/chat */
+    max-width:1000px; /* Max width for the whole app */
     width: 100%;
+    height: 90vh; /* Limit height relative to viewport */
+    max-height: 800px; /* Absolute max height */
+    background-color: #f8f9fa; /* Light background for the app frame */
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    overflow: hidden; /* Important to contain children */
+    padding: 0; /* Reset padding inherited from body */
+    align-items: stretch; /* Make sidebar and chat fill height */
 }
 
-/* ===== Phone frame ===== */
-.phone{
-    --r: 46px;
-    --b: 10px;
-    width: clamp(240px, 21vw, 300px);
-    aspect-ratio: 1 / 2;
-    position:relative;
-    border-radius:var(--r);
-    background:linear-gradient(135deg,#5b4c73 0%,#1d1729 100%);
-    box-shadow:0 24px 48px rgba(0,0,0,.35);
-    padding:var(--b);
-    display:flex;
-    flex-direction:column;
-    transition: width 0.2s ease-out, height 0.2s ease-out;
+/* ===== Sidebar ===== */
+.sidebar {
+    width: 280px; /* Fixed width */
+    flex-shrink: 0; /* Prevent shrinking */
+    background-color: #fff; /* White background */
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    border-right: 1px solid #e9ecef; /* Separator line */
+    overflow-y: auto; /* Allow scrolling if content overflows */
 }
-.screen{flex:1;background:#fff;border-radius:calc(var(--r) - var(--b));position:relative;overflow:hidden;display:flex;flex-direction:column}
 
-/* ===== Dynamic Island & Lang blob ===== */
-.dynamic_island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:104px;height:32px;background:linear-gradient(#1a1a1a,#000);border-radius:16px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;box-shadow:0 8px 16px rgba(0,0,0,.35);border:1px solid #2c2c2e;font-weight:600;letter-spacing:.5px}
+.sidebar h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #495057; /* Dark grey */
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee; /* Subtle underline */
+}
+.sidebar h3:first-of-type {
+    margin-top: 0; /* Remove top margin for the first heading */
+}
+
+/* User search input and button */
+.user-search {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+.user-search input {
+    flex-grow: 1; /* Allow input to take available space */
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.user-search button {
+    padding: 8px 12px;
+    background-color: #6c757d; /* Grey button */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    flex-shrink: 0; /* Prevent button shrinking */
+}
+.user-search button:hover {
+    background-color: #5a6268; /* Darker grey */
+}
+
+/* Styling for the lists in the sidebar */
+#search-results-list,
+#friend-list,
+#pending-requests-list {
+    list-style: none; /* Remove default bullet points */
+    padding: 0;
+    margin: 0 0 15px 0; /* Bottom margin before logout */
+    flex-grow: 1; /* Allow lists to expand */
+    overflow-y: auto; /* Enable scrolling within lists */
+    min-height: 50px; /* Ensure lists have some minimum height */
+}
+
+/* Styling for individual list items */
+#search-results-list li,
+#friend-list li,
+#pending-requests-list li {
+    padding: 10px 5px;
+    border-bottom: 1px solid #f1f3f5; /* Light separator */
+    cursor: pointer;
+    transition: background-color 0.15s;
+    display: flex;
+    justify-content: space-between; /* Space out content */
+    align-items: center;
+    font-size: 15px;
+}
+#search-results-list li:hover,
+#friend-list li:hover,
+#pending-requests-list li:hover {
+    background-color: #f8f9fa; /* Highlight on hover */
+}
+/* Remove border from the last item in each list */
+#search-results-list li:last-child,
+#friend-list li:last-child,
+#pending-requests-list li:last-child {
+    border-bottom: none;
+}
+
+/* Buttons within list items (Add Friend, Accept Request) */
+#search-results-list button,
+#pending-requests-list button {
+    padding: 4px 8px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 5px; /* Space between username and button */
+    flex-shrink: 0; /* Prevent buttons shrinking */
+}
+#search-results-list button.add-friend-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+}
+#search-results-list button.add-friend-btn:hover {
+    background-color: #218838; /* Darker green */
+}
+#pending-requests-list button.accept-request-btn {
+     background-color: #0a84ff; /* Blue */
+     color: white;
+}
+#pending-requests-list button.accept-request-btn:hover {
+      background-color: #0077e6; /* Darker blue */
+}
+
+
+/* Logout button styling */
+#logout-button {
+    margin-top: auto; /* Push logout button to the bottom */
+    padding: 10px;
+    background-color: #dc3545; /* Red */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    width: 100%; /* Make button full width */
+}
+#logout-button:hover {
+    background-color: #c82333; /* Darker red */
+}
+
+
+/* ===== Chat Interface ===== */
+/* Use the #chat-interface ID to style the main chat area */
+#chat-interface {
+    flex-grow: 1; /* Allow chat area to fill remaining width */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Fill container height */
+    /* Reset styles inherited from original .phone class if needed */
+    width: auto;
+    aspect-ratio: auto;
+    position: relative; /* Needed for absolute positioning inside if any */
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* Style the screen within the chat interface */
+#chat-interface .screen {
+    flex: 1; /* Take available vertical space */
+    border-radius: 0;
+    /* border-left: 1px solid #e9ecef; /* Separator line (already on sidebar) */
+    background-color: #fff; /* White background for chat screen */
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Ensure it contains positioned elements */
+    overflow: hidden; /* Clip content */
+}
+
+/* Style the header above the messages */
+.chat-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #f8f9fa; /* Slight contrast */
+    flex-shrink: 0; /* Prevent header from shrinking */
+}
+.chat-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #343a40; /* Dark text */
+    margin: 0;
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ... if name is too long */
+}
+
+/* Style the messages area */
+#chat-interface .messages {
+    flex: 1; /* Take remaining vertical space */
+    padding: 16px;
+    margin-top: 0; /* Override any previous margin */
+    overflow-y: auto; /* Enable vertical scrolling */
+    display: flex;
+    flex-direction: column;
+    scrollbar-width: thin; /* Scrollbar style for Firefox */
+    scrollbar-color: #ccc #eee; /* Scrollbar colors for Firefox */
+}
+/* Scrollbar styles for Webkit browsers (Chrome, Safari, Edge) */
+#chat-interface .messages::-webkit-scrollbar {
+    width: 6px;
+}
+#chat-interface .messages::-webkit-scrollbar-track {
+    background: #eee;
+    border-radius: 3px;
+}
+#chat-interface .messages::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+#chat-interface .messages::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+}
+
+
+/* Style the message input area */
+#chat-interface .input_area {
+     background: #f8f9fa; /* Match header background */
+     padding: 10px 15px;
+     margin-bottom: 0; /* Remove default margin */
+     border-top: 1px solid #e2e2e6; /* Keep top border */
+     flex-shrink: 0; /* Prevent input area shrinking */
+}
+
+
+/* ===== Original Phone Frame - Keep only necessary styles for bubbles ===== */
+/* .phone { ... } - Most styles removed or overridden by #chat-interface */
+/* .screen { ... } - Most styles removed or overridden by #chat-interface .screen */
+
+/* Keep Dynamic Island styles if you intend to use it */
+.dynamic_island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:104px;height:32px;background:linear-gradient(#1a1a1a,#000);border-radius:16px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;box-shadow:0 8px 16px rgba(0,0,0,.35);border:1px solid #2c2c2e;font-weight:600;letter-spacing:.5px; z-index: 10;} /* Ensure it's above messages */
 .dynamic_island::after{content:"";width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#4a4a4a 0%,#0e0e0e 60%)}
-.lang_blob {position: absolute; top: 12px; left: calc(50% + 52px + 16px); width: 32px; height: 32px; background: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 12px; font-weight: 600; letter-spacing: .5px; font-family: "SF Pro Text", sans-serif; cursor: pointer; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,.3); border: 1px solid #2c2c2e;}
-.lang_blob select{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer}
 
-/* ===== Messages ===== */
-.messages{flex:1;padding:16px 16px 16px; margin-top:52px; overflow-y:auto;display:flex;flex-direction:column; scrollbar-width:none;}
-.messages::-webkit-scrollbar{display:none}
-
+/* ===== Messages Bubbles (Keep existing styles) ===== */
 .bubble {
     max-width: 72%;
     padding: 10px 14px;
     font-size: 15px;
     line-height: 1.4;
-    box-shadow: 0 1px 0.5px rgba(0, 0, 0, .13); /* Subtle shadow */
-    opacity: 0;
-    transform: translateY(10px);
-    animation: bubble_in .3s forwards;
+    box-shadow: 0 1px 0.5px rgba(0, 0, 0, .13);
+    opacity: 0; /* Start transparent for animation */
+    transform: translateY(10px); /* Start slightly lower for animation */
+    animation: bubble_in .3s forwards; /* Apply animation */
     display: flex;
     flex-direction: column;
     position: relative;
-    border-radius: 18px; /* Slightly reduced base radius */
-    /* Add this line */
-    margin-top: 12px; /* <<< SET A DEFAULT TOP MARGIN HERE (e.g., 12px) */
-    /* Make sure there isn't another margin-top: 0; below this */
+    border-radius: 18px;
+    margin-top: 12px; /* Default spacing */
 }
 .bubble span{white-space:pre-wrap;word-break:break-word}
 
-/* *** REDUCED GAP for consecutive messages *** */
+/* Consecutive message styling */
 .bubble.consecutive {
-    margin-top: 2px !important; /* Closer spacing */
-    box-shadow: none; /* Remove shadow for inner bubbles for flatter look */
+    margin-top: 2px !important; /* Reduce top margin */
+    box-shadow: none; /* Remove shadow for inner bubbles */
 }
-/* Add shadow back to the last bubble in a sequence */
 .bubble.last-in-sequence.consecutive {
-     box-shadow:0 1px 0.5px rgba(0,0,0,.13);
+     box-shadow:0 1px 0.5px rgba(0,0,0,.13); /* Add shadow back to last bubble */
 }
 
-
-/* --- Bubble Tick Styling (Refined) --- */
-/* Define base rounded corners */
+/* Bubble Tick Styling */
 .bubble.incoming { border-radius: 18px; align-self: flex-start; background: #e4e4e8; color: #000; }
 .bubble.outgoing { border-radius: 18px; align-self: flex-end; background: #0a84ff; color: #fff; }
 
 /* Incoming Message Shapes */
-.bubble.incoming.first-in-sequence.last-in-sequence { /* Single message */
-    border-top-left-radius: 18px;
-    border-bottom-left-radius: 5px; /* Only bottom tick */
-}
-.bubble.incoming.first-in-sequence:not(.last-in-sequence) { /* First of multiple */
-    border-top-left-radius: 18px; /* Keep top round */
-    border-bottom-left-radius: 5px; /* Flatten bottom */
-}
- .bubble.incoming.middle-in-sequence { /* Middle */
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
- .bubble.incoming.last-in-sequence:not(.first-in-sequence) { /* Last of multiple */
-    border-top-left-radius: 5px; /* Flatten top */
-    border-bottom-left-radius: 18px; /* Keep bottom round */
-}
+.bubble.incoming.first-in-sequence.last-in-sequence { border-bottom-left-radius: 5px; }
+.bubble.incoming.first-in-sequence:not(.last-in-sequence) { border-bottom-left-radius: 5px; }
+.bubble.incoming.middle-in-sequence { border-top-left-radius: 5px; border-bottom-left-radius: 5px; }
+.bubble.incoming.last-in-sequence:not(.first-in-sequence) { border-top-left-radius: 5px; /* Keep bottom round */ } /* Corrected */
 
 /* Outgoing Message Shapes */
-.bubble.outgoing.first-in-sequence.last-in-sequence { /* Single message */
-    border-top-right-radius: 18px;
-    border-bottom-right-radius: 5px;
-}
-.bubble.outgoing.first-in-sequence:not(.last-in-sequence) { /* First of multiple */
-    border-top-right-radius: 18px;
-    border-bottom-right-radius: 5px;
-}
-.bubble.outgoing.middle-in-sequence { /* Middle */
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-.bubble.outgoing.last-in-sequence:not(.first-in-sequence) { /* Last of multiple */
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 18px;
-}
+.bubble.outgoing.first-in-sequence.last-in-sequence { border-bottom-right-radius: 5px; }
+.bubble.outgoing.first-in-sequence:not(.last-in-sequence) { border-bottom-right-radius: 5px; }
+.bubble.outgoing.middle-in-sequence { border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
+.bubble.outgoing.last-in-sequence:not(.first-in-sequence) { border-top-right-radius: 5px; /* Keep bottom round */ } /* Corrected */
 
 
-/* Style for Sender Name */
+/* Sender Name */
 .bubble .sender_name {
     font-weight: bold;
     font-size: 13px;
@@ -118,7 +370,7 @@ html,body{height:100%;display:flex;justify-content:center;align-items:center;bac
     color: #6c757d;
     align-self: flex-start;
 }
-.bubble.outgoing .sender_name { display: none; }
+.bubble.outgoing .sender_name { display: none; } /* Hide sender name on outgoing */
 .bubble.typing .sender_name.typing_name { font-weight: normal; font-style: italic; font-size: 13px; color: #6b6b6f; margin-bottom: 2px; }
 
 /* Typing Bubble Specific Styles */
@@ -126,15 +378,17 @@ html,body{height:100%;display:flex;justify-content:center;align-items:center;bac
     background: #e4e4e8; color: #6b6b6f; opacity: 1; padding: 8px 16px;
     min-height: 40px; justify-content: flex-start; box-shadow: none;
     border: 1px solid #dcdce0;
-    border-radius: 18px; /* Match bubble radius */
-    margin-top: 1px;
+    border-radius: 18px;
+    margin-top: 1px; /* Minimal margin */
+    animation: none; /* Override bubble_in animation */
+    transform: none; /* Override bubble_in transform */
 }
 
 
 /* Animations */
 @keyframes fade_out_bubble { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.9); } }
 .bubble.typing.hiding { animation: fade_out_bubble 0.3s ease-out forwards; pointer-events: none; }
-@keyframes bubble_in{to{opacity:1;transform:translateY(0)}}
+@keyframes bubble_in{ to{ opacity:1; transform:translateY(0) } } /* Define bubble_in */
 
 /* Typing indicator dots */
 .typing_indicator{display:flex;gap:3px;align-items:flex-end;height:8px; margin-top: 2px;}
@@ -143,10 +397,75 @@ html,body{height:100%;display:flex;justify-content:center;align-items:center;bac
 .typing_indicator span:nth-child(3){animation-delay:.4s}
 @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-3px);opacity:1}}
 
-/* ===== Input area ===== */
-.input_area { display: flex; gap: 8px; padding: 10px 12px 0; margin-bottom: 12px; background: #fafafa; border-top: 1px solid #e2e2e6; box-shadow: 0 -1px 3px rgba(0,0,0,.05); align-items: center; }
+/* ===== Input area (Keep existing styles + disabled state) ===== */
+.input_area { display: flex; gap: 8px; padding: 10px 12px; /* Adjusted padding */ background: #fafafa; border-top: 1px solid #e2e2e6; box-shadow: 0 -1px 3px rgba(0,0,0,.05); align-items: center; }
 .text_input { flex: 1; padding: 10px 15px; border: 1px solid #d0d0d4; border-radius: 20px; background: #fff; font-size: 15px; outline: none; transition: border .2s, box-shadow .2s; min-width: 50px; }
 .text_input:focus{border-color:#0a84ff;box-shadow:0 0 0 2px rgba(10,132,255,.2)}
 .send_button { width: 40px; height: 40px; flex-shrink: 0; background: #0a84ff; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,.15); transition: transform .1s, box-shadow .15s; }
 .send_button svg{width:18px;height:18px;fill:#fff}
 .send_button:active{transform:scale(.85);box-shadow:0 1px 2px rgba(0,0,0,.18)}
+/* Disabled state for input/button */
+.text_input:disabled, .send_button:disabled {
+    background-color: #e9ecef; /* Lighter background when disabled */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.send_button:disabled {
+    background: #adb5bd; /* Grey out send button */
+    box-shadow: none;
+    transform: none; /* Prevent active scale effect */
+}
+
+
+/* ===== Responsive Adjustments ===== */
+@media (max-width: 768px) {
+    html, body {
+        padding: 0; /* Remove padding on small screens */
+        align-items: flex-start; /* Align content to top */
+        height: 100%; /* Ensure body takes full height */
+        overflow: hidden; /* Prevent body scrolling */
+    }
+    /* Make app container take full screen */
+    .container {
+        flex-direction: column; /* Stack sidebar and chat */
+        height: 100vh; /* Full viewport height */
+        max-height: none; /* Remove max-height */
+        width: 100%;
+        border-radius: 0; /* Remove border radius */
+        gap: 0;
+        box-shadow: none; /* Remove shadow */
+    }
+    /* Adjust sidebar for mobile */
+    .sidebar {
+        width: 100%; /* Full width */
+        height: auto; /* Auto height based on content */
+        max-height: 45vh; /* Limit sidebar height, adjust as needed */
+        border-right: none;
+        border-bottom: 1px solid #e9ecef; /* Add bottom border */
+        padding: 15px;
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+    /* Adjust chat interface for mobile */
+    #chat-interface {
+        height: auto; /* Let it take remaining height */
+        flex-grow: 1; /* Ensure it fills space */
+        overflow: hidden; /* Prevent internal overflow issues */
+    }
+     #chat-interface .screen {
+        border-left: none; /* Remove side border */
+        height: 100%; /* Ensure screen fills chat interface */
+    }
+    /* Adjust auth container for mobile */
+    .auth-container {
+        margin: 20px; /* Add some margin */
+        padding: 20px; /* Reduce padding */
+        max-width: none; /* Allow full width minus margins */
+    }
+
+    #chat-interface .messages {
+        padding: 10px; /* Reduce padding slightly */
+    }
+    #chat-interface .input_area {
+        padding: 8px 10px; /* Reduce padding slightly */
+    }
+}
